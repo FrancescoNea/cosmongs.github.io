@@ -185,7 +185,6 @@
 		/* Responsive adjustments */
 		@media (max-width: 768px) {
 		    nav {
-		        flex-direction: column; /* This breaks the layout */
 		        gap: 1rem;
 		        padding: 0.25rem 0;
 		    }
@@ -761,36 +760,17 @@
         }
         
         /* Responsive */
-		Good catch! That existing responsive section has several issues that are causing mobile problems:
-		Problems in that section:
-
-		Navigation Issue (lines with nav styles):
-
-		cssnav {
+		nav {
 		    flex-direction: column;  /* This breaks the header layout badly */
 		    gap: 1rem;
 		    padding: 0.25rem 0;
 		}
-		Problem: This makes the nav stack vertically, breaking the header and making it unusable.
-
-		Hero text still too large:
-
-		css.hero h1 {
+		
+		.hero h1 {
 		    font-size: 2.5rem;  /* Still too big for mobile */
 		}
 
-		Missing critical mobile fixes - this section doesn't address:
-
-		Contact grid layout
-		Hero text positioning issues
-		Service card layouts
-		Text readability
-
-
-
-		How to fix that section:
-		Replace the entire responsive section with:
-		css@media (max-width: 768px) {
+		@media (max-width: 768px) {
 		    .cart-sidebar {
 		        width: 100%;
 		        right: -100%;
