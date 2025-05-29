@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Methylomics Services - COSMO</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #10b981;
+            --light: #f3f4f6;
+            --dark: #1f2937;
+            --text: #4b5563;
+            --success: #059669;
+            --warning: #d97706;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+		body {
+		    color: var(--text);
+		    line-height: 1.6;
+		    padding-top: 100px;
+		}
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        
+        /* Header */
+        header {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 9999;  /* Changed from 80px to 9999 */
+            height: 80px; /* ADDED: Fixed height for smaller header */
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0; /* REDUCED from 1rem - smaller padding */
+            height: 100%;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .logo:hover {
+            color: var(--primary-dark);
+        }
+        
+        /* Logo in header - KEPT 100px as requested */
+		.logo-img {
+		    height: 70px; /* KEPT 100px as you requested */
+		    width: 70px;  /* KEPT 100px as you requested */
+		    border-radius: 50%;
+		    object-fit: cover;
+		}
+		
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+        
+        .cart-icon {
+            position: relative;
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+        
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: var(--secondary);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+        
+        /* Page Header */
+		.page-header {
+		    background: white;
+		    color: var(--dark);
+		    padding: 4rem 0 2rem;
+		    text-align: center;
+		}
+
+		.page-header h1 {
+		    font-size: 3rem;
+		    margin-bottom: 1rem;
+		    color: var(--dark);
+		}
+
+		.page-header p {
+		    font-size: 1.25rem;
+		    max-width: 800px;
+		    margin: 0 auto;
+		    color: var(--text);
+		}
+        
+        /* Services Grid */
+        .services-section {
+            padding: 4rem 0;
+            background: white;
+        }
+        
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .service-package {
+            background: var(--light);
+            border-radius: 12px;
+            padding: 2rem;
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .service-package:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .package-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .package-title {
+            font-size: 1.5rem;
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+        }
+        
+        .package-price {
+            font-size: 2rem;
+            color: var(--primary);
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+        
+        .package-duration {
+            color: var(--text);
+            font-size: 0.9rem;
+        }
+        
+        .features-list {
+            list-style: none;
+            margin: 2rem 0;
+        }
+        
+        .features-list li {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.75rem;
+            color: var(--text);
+        }
+        
+        .features-list li::before {
+            content: '✓';
+            color: var(--success);
+            font-weight: bold;
+            margin-right: 0.75rem;
+        }
+        
+        .add-to-cart {
+            width: 100%;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .add-to-cart:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        
+        .add-to-cart:active {
+            transform: translateY(0);
+        }
+        
+        /* Popular badge */
+        .popular {
+            position: relative;
+        }
+        
+        .popular::before {
+            content: 'Most Popular';
+            position: absolute;
+            top: 20px;
+            right: -30px;
+            background: var(--secondary);
+            color: white;
+            padding: 0.5rem 2rem;
+            font-size: 0.8rem;
+            font-weight: bold;
+            transform: rotate(45deg);
+            z-index: 1;
+        }
+        
+        /* Cart Sidebar */
+        .cart-sidebar {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 400px;
+            height: 100vh;
+            background: white;
+            box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+            transition: right 0.3s;
+            z-index: 1000;
+            overflow-y: auto;
+        }
+        
+        .cart-sidebar.open {
+            right: 0;
+        }
+        
+        .cart-header {
+            padding: 2rem;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .cart-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text);
+        }
+        
+        .cart-items {
+            padding: 2rem;
+        }
+        
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .cart-item:last-child {
+            border-bottom: none;
+        }
+        
+        .item-info h4 {
+            color: var(--dark);
+            margin-bottom: 0.25rem;
+        }
+        
+        .item-price {
+            color: var(--primary);
+            font-weight: bold;
+        }
+        
+        .remove-item {
+            background: var(--warning);
+            color: white;
+            border: none;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+        
+        .cart-total {
+            padding: 2rem;
+            border-top: 2px solid var(--primary);
+            background: var(--light);
+        }
+        
+        .total-price {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary);
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+        
+        .checkout-btn {
+            width: 100%;
+            background: var(--secondary);
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        
+        .checkout-btn:hover {
+            background: var(--success);
+        }
+        
+        /* Overlay */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+            z-index: 999;
+        }
+        
+        .overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+		@media (max-width: 768px) {
+		    .cart-sidebar {
+		        width: 100%;
+		        right: -100%;
+		    }
+    
+		    .services-grid {
+		        grid-template-columns: 1fr;
+		    }
+    
+		    .page-header h1 {
+		        font-size: 2rem;
+		    }
+    
+			.logo-img {
+			    height: 60px;
+			    width: 60px;
+			    border-radius: 50%;
+			    object-fit: cover;
+			}
+		}
+		
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <nav>
+                <a href="index.html" class="logo">
+    <img src="Cosmologo_NoText.jpg" alt="COSMO Logo" class="logo-img">
+    Home
+</a>
+                <div class="nav-links">
+                    <a href="index.html">Home</a>
+                    <a href="services_page.html">Services</a>
+                    <a href="#contact">Contact</a>
+                    <div class="cart-icon" onclick="toggleCart()">
+                        🛒
+                        <span class="cart-count" id="cartCount">0</span>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <h1>🔍 Methylomics Analysis</h1>
+            <p>Comprehensive DNA methylation analysis for epigenetic research, biomarker discovery, and disease studies</p>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section class="services-section">
+        <div class="container">
+            <div class="services-grid">
+                <div class="service-package">
+                    <div class="package-header">
+                        <h3 class="package-title">WGBS Basic</h3>
+                        <div class="package-price">€1,800</div>
+                        <div class="package-duration">7-10 business days</div>
+                    </div>
+                    <ul class="features-list">
+                        <li>Whole genome bisulfite sequencing analysis</li>
+                        <li>Quality control and adapter trimming</li>
+                        <li>Bisulfite conversion efficiency assessment</li>
+                        <li>Methylation calling and filtering</li>
+                        <li>Global methylation statistics</li>
+                        <li>Basic visualization and summary</li>
+                        <li>Raw and processed data delivery</li>
+                    </ul>
+                    <button class="add-to-cart" onclick="addToCart('WGBS Basic', 1800)">Add to Cart</button>
+                </div>
+
+                <div class="service-package popular">
+                    <div class="package-header">
+                        <h3 class="package-title">Differential Methylation</h3>
+                        <div class="package-price">€3,200</div>
+                        <div class="package-duration">10-14 business days</div>
+                    </div>
+                    <ul class="features-list">
+                        <li>All WGBS Basic features</li>
+                        <li>Differential methylation analysis</li>
+                        <li>DMR (Differentially Methylated Regions) calling</li>
+                        <li>Statistical significance testing</li>
+                        <li>Functional annotation of DMRs</li>
+                        <li>Gene ontology enrichment</li>
+                        <li>Pathway analysis</li>
+                        <li>Comprehensive methylation report</li>
+                    </ul>
+                    <button class="add-to-cart" onclick="addToCart('Differential Methylation', 3200)">Add to Cart</button>
+                </div>
+
+                <div class="service-package">
+                    <div class="package-header">
+                        <h3 class="package-title">RRBS Analysis</h3>
+                        <div class="package-price">€1,400</div>
+                        <div class="package-duration">5-8 business days</div>
+                    </div>
+                    <ul class="features-list">
+                        <li>Reduced representation bisulfite sequencing</li>
+                        <li>CpG island focused analysis</li>
+                        <li>Quality control and preprocessing</li>
+                        <li>Methylation quantification</li>
+                        <li>Promoter methylation analysis</li>
+                        <li>Basic statistical analysis</li>
+                        <li>Visualization and summary report</li>
+                    </ul>
+                    <button class="add-to-cart" onclick="addToCart('RRBS Analysis', 1400)">Add to Cart</button>
+                </div>
+
+                <div class="service-package">
+                    <div class="package-header">
+                        <h3 class="package-title">Methylation Arrays</h3>
+                        <div class="package-price">€1,100</div>
+                        <div class="package-duration">3-5 business days</div>
+                    </div>
+                    <ul class="features-list">
+                        <li>450K/850K methylation array analysis</li>
+                        <li>Quality control and normalization</li>
+                        <li>Batch effect correction</li>
+                        <li>Beta and M-value calculations</li>
+                        <li>Principal component analysis</li>
+                        <li>Age prediction and cell deconvolution</li>
+                        <li>Basic differential methylation</li>
+                        <li>Standard analysis report</li>
+                    </ul>
+                    <button class="add-to-cart" onclick="addToCart('Methylation Arrays', 1100)">Add to Cart</button>
+                </div>
+
+                <div class="service-package">
+                    <div class="package-header">
+                        <h3 class="package-title">Multi-Omics Integration</h3>
+                        <div class="package-price">€4,800</div>
+                        <div class="package-duration">15-20 business days</div>
+                    </div>
+                    <ul class="features-list">
+                        <li>Integration of methylation with RNA-seq</li>
+                        <li>Correlation analysis between omics layers</li>
+                        <li>Multi-omics pathway analysis</li>
+                        <li>Regulatory network construction</li>
+                        <li>Machine learning classification</li>
+                        <li>Advanced visualization dashboards</li>
+                        <li>Biomarker discovery pipeline</li>
+                        <li>Executive summary presentation</li>
+                    </ul>
+                    <button class="add-to-cart" onclick="addToCart('Multi-Omics Integration', 4800)">Add to Cart</button>
+                </div>
+
+                <div class="service-package">
+                    <div class="package-header">
+                        <h3 class="package-title">Custom Methylomics</h3>
+                        <div class="package-price">€200/hour</div>
+                        <div class="package-duration">Timeline varies</div>
+                    </div>
+                    <ul class="features-list">
+                        <li>Tailored methylation analysis workflows</li>
+                        <li>Novel method development</li>
+                        <li>Specialized statistical approaches</li>
+                        <li>Custom visualization and reporting</li>
+                        <li>Integration with clinical data</li>
+                        <li>Longitudinal methylation studies</li>
+                        <li>Method validation and benchmarking</li>
+                        <li>Ongoing consultation support</li>
+                    </ul>
+                    <button class="add-to-cart" onclick="addToCart('Custom Methylomics (per hour)', 200)">Add to Cart</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Cart Sidebar -->
+    <div class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header">
+            <h2>Shopping Cart</h2>
+            <button class="cart-close" onclick="toggleCart()">×</button>
+        </div>
+        <div class="cart-items" id="cartItems">
+            <p style="text-align: center; color: var(--text); margin-top: 2rem;">Your cart is empty</p>
+        </div>
+        <div class="cart-total" id="cartTotal" style="display: none;">
+            <div class="total-price" id="totalPrice">Total: €0</div>
+            <button class="checkout-btn" onclick="checkout()">Proceed to Checkout</button>
+        </div>
+    </div>
+
+    <!-- Overlay -->
+    <div class="overlay" id="overlay" onclick="toggleCart()"></div>
+
+    <script>
+		let cart = [];
+
+		function loadCart() {
+		    try {
+		        if (typeof(Storage) !== "undefined" && localStorage) {
+		            const savedCart = localStorage.getItem('cosmoCart');
+		            return savedCart ? JSON.parse(savedCart) : [];
+		        }
+		    } catch (error) {
+		        console.warn('localStorage not available');
+		    }
+		    return [];
+		}
+
+		function saveCart() {
+		    try {
+		        if (typeof(Storage) !== "undefined" && localStorage) {
+		            localStorage.setItem('cosmoCart', JSON.stringify(cart));
+		        }
+		    } catch (error) {
+		        console.warn('Cannot save to localStorage');
+		    }
+		}
+
+		function addToCart(serviceName, price) {
+		    const existingItem = cart.find(item => item.name === serviceName);
+    
+		    if (existingItem) {
+		        existingItem.quantity += 1;
+		    } else {
+		        cart.push({
+		            name: serviceName,
+		            price: price,
+		            quantity: 1
+		        });
+		    }
+    
+		    saveCart();
+		    updateCart();
+    
+		    // Visual feedback
+		    const button = event.target;
+		    const originalText = button.textContent;
+		    button.textContent = 'Added!';
+		    button.style.background = 'var(--success)';
+    
+		    setTimeout(() => {
+		        button.textContent = originalText;
+		        button.style.background = 'var(--primary)';
+		    }, 1000);
+		}
+
+		function removeFromCart(index) {
+		    cart.splice(index, 1);
+		    saveCart();
+		    updateCart();
+		}
+
+		function updateCart() {
+		    const cartCount = document.getElementById('cartCount');
+		    const cartItems = document.getElementById('cartItems');
+		    const cartTotal = document.getElementById('cartTotal');
+		    const totalPrice = document.getElementById('totalPrice');
+    
+		    // Update cart count
+		    const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+		    if (cartCount) cartCount.textContent = totalItems;
+    
+		    // Update cart items (only if cart sidebar exists)
+		    if (cartItems && cartTotal && totalPrice) {
+		        if (cart.length === 0) {
+		            cartItems.innerHTML = '<p style="text-align: center; color: var(--text); margin-top: 2rem;">Your cart is empty</p>';
+		            cartTotal.style.display = 'none';
+		        } else {
+		            cartItems.innerHTML = cart.map((item, index) => `
+		                <div class="cart-item">
+		                    <div class="item-info">
+		                        <h4>${item.name}</h4>
+		                        <p>Quantity: ${item.quantity}</p>
+		                    </div>
+		                    <div>
+		                        <div class="item-price">€${(item.price * item.quantity).toLocaleString()}</div>
+		                        <button class="remove-item" onclick="removeFromCart(${index})">Remove</button>
+		                    </div>
+		                </div>
+		            `).join('');
+            
+		            // Calculate total
+		            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+		            totalPrice.textContent = `Total: €${total.toLocaleString()}`;
+		            cartTotal.style.display = 'block';
+		        }
+		    }
+		}
+
+		function toggleCart() {
+		    const cartSidebar = document.getElementById('cartSidebar');
+		    const overlay = document.getElementById('overlay');
+    
+		    if (cartSidebar && overlay) {
+		        cartSidebar.classList.toggle('open');
+		        overlay.classList.toggle('active');
+		    }
+		}
+
+		function checkout() {
+		    if (cart.length === 0) {
+		        alert('Your cart is empty!');
+		        return;
+		    }
+    
+		    const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+		    alert(`Thank you for your order! Total: €${total.toLocaleString()}\n\nWe'll contact you shortly to confirm your services and arrange payment.`);
+    
+		    // Reset cart
+		    cart = [];
+		    saveCart();
+		    updateCart();
+		    toggleCart();
+		}
+
+		// Initialize cart when page loads
+		document.addEventListener('DOMContentLoaded', function() {
+		    cart = loadCart();
+		    updateCart();
+		});
+
+		// Listen for storage changes (cart updates from other pages)
+		window.addEventListener('storage', function(e) {
+		    if (e.key === 'cosmoCart') {
+		        cart = loadCart();
+		        updateCart();
+		    }
+		});
+
+		// Update cart every 2 seconds (fallback for cross-page updates)
+		setInterval(function() {
+		    const newCart = loadCart();
+		    if (JSON.stringify(newCart) !== JSON.stringify(cart)) {
+		        cart = newCart;
+		        updateCart();
+		    }
+		}, 2000);
+    </script>
+</body>
+</html>
+                        
